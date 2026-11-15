@@ -1,5 +1,5 @@
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,6 +13,7 @@ import { CarService } from '../../../services/car/car.service';
   imports: [MatTableModule, MatIconModule, MatButtonModule],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class DetailsComponent implements OnInit {

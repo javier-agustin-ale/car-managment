@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -16,6 +16,7 @@ import { NewCarDialog } from '../../new-car/new-car-dialog/new-car-dialog';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [CarService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class HomeComponent implements OnInit {

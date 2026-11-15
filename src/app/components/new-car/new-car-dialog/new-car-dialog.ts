@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -33,6 +33,7 @@ import { CarService } from '../../../services/car/car.service';
   ],
   templateUrl: './new-car-dialog.html',
   styleUrl: './new-car-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class NewCarDialog implements OnInit {
