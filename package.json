@@ -1,5 +1,5 @@
 {
-  "name": "dkv-javier",
+  "name": "car-management",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:dkv-javier": "node dist/dkv-javier/server/server.mjs",
-    "deploy": "ng build --configuration production --base-href \"https://javier-agustin-ale.github.io/dkv-javier/\" && npx angular-cli-ghpages --dir=dist/dkv-javier"
+    "serve:ssr:car-management": "node dist/car-management/server/server.mjs",
+    "deploy": "ng build --configuration production --base-href \"https://javier-agustin-ale.github.io/car-management/\" && npx angular-cli-ghpages --dir=dist/car-management"
   },
   "private": true,
   "dependencies": {

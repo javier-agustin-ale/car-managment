@@ -5,6 +5,6 @@ export interface NewCar {
   fuel: string;
   type: string;
   vin: string;
-  color: string | null;
+  color: string;
   mileage: number | null;
 }

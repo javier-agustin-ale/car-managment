@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -62,7 +68,7 @@ export class HomeComponent implements OnInit {
     this.isCarListLoading$ = this.carService.isCarListLoading$;
     this.carsList$ = this.carService.carList$;
 
-    this.carsList$.pipe(take(1)).subscribe((list) => {
+    this.carsList$.subscribe((list) => {
       const carList: Car[] = list.sort((a, b) => a.name.localeCompare(b.name));
       this.dataSource.data = carList;
     });

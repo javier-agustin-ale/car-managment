@@ -1,60 +1,130 @@
 <h2 mat-dialog-title>Add new car</h2>
 <mat-dialog-content>
-  <form [formGroup]="newCarForm" (submit)="saveNewCar()">
+  <form (submit)="saveNewCar($event)">
     <div class="field-container">
-      <mat-form-field class="form-field">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" />
-      </mat-form-field>
+      <div class="form-field">
+        <label>
+          Name: *
+          <input type="text" [formField]="newCarForm.name" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.name().touched() && newCarForm.name().invalid()"
+        >
+          @if (newCarForm.name().touched() && newCarForm.name().invalid()) {
+          @for (error of newCarForm.name().errors(); track error) { {{
+          error.message }} } }
+        </span>
+      </div>
+      <div class="form-field">
+        <label>
+          Manufacturer: *
+          <input type="text" [formField]="newCarForm.manufacturer" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.manufacturer().touched() && newCarForm.manufacturer().invalid()"
+        >
+          @if (newCarForm.manufacturer().touched() &&
+          newCarForm.manufacturer().invalid()) { @for (error of
+          newCarForm.manufacturer().errors(); track error) { {{ error.message }}
+          } }
+        </span>
+      </div>
+    </div>
 
-      <mat-form-field class="form-field">
-        <mat-label>Manufacturer</mat-label>
-        <input matInput formControlName="manufacturer" />
-      </mat-form-field>
+    <div class="field-container">
+      <div class="form-field">
+        <label>
+          Model: *
+          <input type="text" [formField]="newCarForm.model" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.model().touched() && newCarForm.model().invalid()"
+        >
+          @if (newCarForm.model().touched() && newCarForm.model().invalid()) {
+          @for (error of newCarForm.model().errors(); track error) { {{
+          error.message }} } }
+        </span>
+      </div>
+      <div class="form-field">
+        <label>
+          Fuel: *
+          <input type="text" [formField]="newCarForm.fuel" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.fuel().touched() && newCarForm.fuel().invalid()"
+        >
+          @if (newCarForm.fuel().touched() && newCarForm.fuel().invalid()) {
+          @for (error of newCarForm.fuel().errors(); track error) { {{
+          error.message }} } }
+        </span>
+      </div>
+    </div>
+
+    <div class="field-container">
+      <div class="form-field">
+        <label>
+          VIN: *
+          <input type="text" [formField]="newCarForm.vin" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.vin().touched() && newCarForm.vin().invalid()"
+        >
+          @if (newCarForm.vin().touched() && newCarForm.vin().invalid()) { @for
+          (error of newCarForm.vin().errors(); track error) { {{ error.message
+          }} } }
+        </span>
+      </div>
+      <div class="form-field">
+        <label>
+          Type: *
+          <input type="text" [formField]="newCarForm.type" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.type().touched() && newCarForm.type().invalid()"
+        >
+          @if (newCarForm.type().touched() && newCarForm.type().invalid()) {
+          @for (error of newCarForm.type().errors(); track error) { {{
+          error.message }} } }
+        </span>
+      </div>
     </div>
     <div class="field-container">
-      <mat-form-field class="form-field">
-        <mat-label>Model</mat-label>
-        <input matInput formControlName="model" />
-      </mat-form-field>
-
-      <mat-form-field class="form-field">
-        <mat-label>Fuel</mat-label>
-        <input matInput formControlName="fuel" />
-      </mat-form-field>
+      <div class="form-field">
+        <label>
+          Color:
+          <input type="text" [formField]="newCarForm.color" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.color().touched() && newCarForm.color().invalid()"
+        >
+          @if (newCarForm.color().touched() && newCarForm.color().invalid()) {
+          @for (error of newCarForm.color().errors(); track error) { {{
+          error.message }} } }
+        </span>
+      </div>
+      <div class="form-field">
+        <label>
+          Mileage:
+          <input type="number" [formField]="newCarForm.mileage" />
+        </label>
+        <span
+          class="error-list"
+          [class.visible]="newCarForm.mileage().touched() && newCarForm.mileage().invalid()"
+        >
+          @if (newCarForm.mileage().touched() && newCarForm.mileage().invalid())
+          { @for (error of newCarForm.mileage().errors(); track error) { {{
+          error.message }} } }
+        </span>
+      </div>
     </div>
 
-    <div class="field-container">
-      <mat-form-field class="form-field">
-        <mat-label>VIN</mat-label>
-        <input matInput formControlName="vin" />
-      </mat-form-field>
-
-      <mat-form-field class="form-field">
-        <mat-label>Type</mat-label>
-        <input matInput formControlName="type" />
-      </mat-form-field>
-    </div>
-    <div class="field-container">
-      <mat-form-field class="form-field">
-        <mat-label>Color</mat-label>
-        <input matInput formControlName="color" />
-      </mat-form-field>
-
-      <mat-form-field class="form-field">
-        <mat-label>Mileage</mat-label>
-        <input matInput formControlName="mileage" type="number" />
-      </mat-form-field>
-    </div>
-
-    <div>
-      <button
-        matButton="outlined"
-        class="submit-button"
-        [disabled]="!newCarForm.valid"
-      >
-        Save
-      </button>
-    </div>
+    <button type="submit" [disabled]="!newCarForm().valid()">Save</button>
   </form>
 </mat-dialog-content>

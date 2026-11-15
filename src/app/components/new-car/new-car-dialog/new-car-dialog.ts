@@ -1,55 +1,58 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MatDialogContent,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { take } from 'rxjs';
-import { NewCarForm } from '../../../interfaces/new-car-form.interface';
 import { NewCar } from '../../../interfaces/new-car.interface';
 import { CarService } from '../../../services/car/car.service';
+import { form, FormField, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-new-car-dialog',
   imports: [
     MatDialogModule,
     MatDialogContent,
-    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    ReactiveFormsModule,
     MatSnackBarModule,
+    FormField,
   ],
   templateUrl: './new-car-dialog.html',
   styleUrl: './new-car-dialog.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
-export class NewCarDialog implements OnInit {
-  public newCarForm!: FormGroup<NewCarForm>;
-
+export class NewCarDialog {
+  readonly newCarModel = signal<NewCar>({
+    name: '',
+    manufacturer: '',
+    model: '',
+    fuel: '',
+    type: '',
+    vin: '',
+    color: '',
+    mileage: null,
+  });
+  public newCarForm = form(this.newCarModel, (schemaPath) => {
+    required(schemaPath.name, { message: 'Name is required' });
+    required(schemaPath.manufacturer, { message: 'Manufacturer is required' });
+    required(schemaPath.model, { message: 'Model is required' });
+    required(schemaPath.fuel, { message: 'Fuel is required' });
+    required(schemaPath.type, { message: 'Car Type is required' });
+    required(schemaPath.vin, { message: 'VIN is required' });
+  });
   private carService = inject(CarService);
   private snackBar = inject(MatSnackBar);
   private dialogRef = inject(MatDialogRef<NewCarDialog>);
 
-  public ngOnInit(): void {
-    this.createForm();
-  }
-
-  public saveNewCar(): void {
-    const formValue = this.newCarForm.value as NewCar;
-
+  public saveNewCar(e: Event): void {
+    e.preventDefault();
+    const formValue = this.newCarModel();
     const nullableFields = ['color', 'mileage'];
 
     const hasEmptyStrings = Object.entries(formValue).some(([key, val]) => {
@@ -59,53 +62,24 @@ export class NewCarDialog implements OnInit {
       return typeof val === 'string' && val.trim() === '';
     });
 
-    if (this.newCarForm.invalid || hasEmptyStrings) {
-      this.newCarForm.markAllAsTouched();
+    if (this.newCarForm().invalid() || hasEmptyStrings) {
       this.showSnackBar('Please complete all required fields.', 'Accept');
       return;
     }
 
     this.carService
-      .saveNewCar$(this.newCarForm.value as NewCar)
+      .saveNewCar$(formValue)
       .pipe(take(1))
       .subscribe((response: boolean | HttpErrorResponse) => {
         if (typeof response === 'boolean') {
           this.dialogRef.close(response);
           return;
         }
-        this.showSnackBar(response.error, 'Accept');
+        this.showSnackBar(
+          'Error ' + response.status + ': ' + response.error,
+          'Accept',
+        );
       });
-  }
-
-  private createForm(): void {
-    this.newCarForm = new FormGroup<NewCarForm>({
-      name: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      manufacturer: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      model: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      fuel: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      type: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      vin: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      color: new FormControl(null),
-      mileage: new FormControl(null),
-    });
   }
 
   private showSnackBar(message: string, button: string): void {
