@@ -1,5 +1,21 @@
-<h2 mat-dialog-title>Add new car</h2>
-<mat-dialog-content>
+<dialog
+  #dialog
+  class="dialog"
+  aria-labelledby="dialog-title"
+  (click)="onDialogClick($event)"
+  (close)="closed.emit(saveSucceeded)"
+>
+  <div class="dialog-header">
+    <h2 id="dialog-title">Add new car</h2>
+    <button
+      type="button"
+      class="close-button"
+      aria-label="Close"
+      (click)="closeDialog()"
+    >
+      &times;
+    </button>
+  </div>
   <form (submit)="saveNewCar($event)">
     <div class="field-container">
       <div class="form-field">
@@ -125,6 +141,9 @@
       </div>
     </div>
 
+    @if (message()) {
+    <p class="form-message" role="alert">{{ message() }}</p>
+    }
     <button type="submit" [disabled]="!newCarForm().valid()">Save</button>
   </form>
-</mat-dialog-content>
+</dialog>

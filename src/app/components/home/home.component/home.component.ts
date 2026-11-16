@@ -6,7 +6,6 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -18,7 +17,13 @@ import { NewCarDialog } from '../../new-car/new-car-dialog/new-car-dialog';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, MatTableModule, MatPaginator, MatProgressBarModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatPaginator,
+    MatProgressBarModule,
+    NewCarDialog,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [CarService],
@@ -32,6 +37,7 @@ export class HomeComponent implements OnInit {
 
   public carsList$: Observable<Car[]> = NEVER;
   public isCarListLoading$: Observable<boolean> = NEVER;
+  public isNewCarDialogOpen = false;
 
   public displayedColumns: string[] = [
     'name',
@@ -43,7 +49,6 @@ export class HomeComponent implements OnInit {
 
   private carService = inject(CarService);
   private router = inject(Router);
-  private dialog = inject(MatDialog);
 
   public ngOnInit(): void {
     this.defineStreams();
@@ -54,14 +59,14 @@ export class HomeComponent implements OnInit {
   }
 
   public addNewCar(): void {
-    const dialogRef = this.dialog.open(NewCarDialog, {
-      width: '700px',
-      maxWidth: '700px',
-    });
+    this.isNewCarDialogOpen = true;
+  }
 
-    dialogRef.afterClosed().subscribe(() => {
+  public closeNewCarDialog(saved: boolean): void {
+    this.isNewCarDialogOpen = false;
+    if (saved) {
       this.carService.updateCarList$();
-    });
+    }
   }
 
   public defineStreams(): void {

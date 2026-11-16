@@ -61,3 +61,7 @@
   </div>
   }
 </div>
+
+@if (isNewCarDialogOpen) {
+<app-new-car-dialog (closed)="closeNewCarDialog($event)"></app-new-car-dialog>
+}
