@@ -1,59 +1,41 @@
 <div class="container">
   <div class="button-container">
-    <button matButton="tonal" (click)="navigateBack()">
-      <mat-icon>arrow_back</mat-icon>
-      Back
+    <button class="back-button" type="button" (click)="navigateBack()">
+      <span aria-hidden="true">&larr;</span>
+      <span>Back</span>
     </button>
   </div>
   <div class="car-name-container">
-    <h1>{{ carName }}</h1>
+    <h1>{{ carName() }}</h1>
   </div>
-  <table mat-table [dataSource]="dataSource" class="table">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="manufacturer">
-      <th mat-header-cell *matHeaderCellDef>Manufacturer</th>
-      <td mat-cell *matCellDef="let element">{{ element.manufacturer }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="model">
-      <th mat-header-cell *matHeaderCellDef>Model</th>
-      <td mat-cell *matCellDef="let element">{{ element.model }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="fuel">
-      <th mat-header-cell *matHeaderCellDef>Fuel</th>
-      <td mat-cell *matCellDef="let element">{{ element.fuel }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="vin">
-      <th mat-header-cell *matHeaderCellDef>VIN</th>
-      <td mat-cell *matCellDef="let element">{{ element.vin }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="color">
-      <th mat-header-cell *matHeaderCellDef>Color</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.color ? element.color : "-" }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="mileage">
-      <th mat-header-cell *matHeaderCellDef>Mileage</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.mileage ? element.mileage : "-" }}
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Manufacturer</th>
+          <th scope="col">Model</th>
+          <th scope="col">Fuel</th>
+          <th scope="col">Type</th>
+          <th scope="col">VIN</th>
+          <th scope="col">Color</th>
+          <th scope="col">Mileage</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (car of cars(); track car.id) {
+          <tr>
+            <td>{{ car.id }}</td>
+            <td>{{ car.manufacturer }}</td>
+            <td>{{ car.model }}</td>
+            <td>{{ car.fuel }}</td>
+            <td>{{ car.type }}</td>
+            <td>{{ car.vin }}</td>
+            <td>{{ car.color ? car.color : "-" }}</td>
+            <td>{{ car.mileage ? car.mileage : "-" }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
