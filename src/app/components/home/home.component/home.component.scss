@@ -1,18 +1,22 @@
 .container {
   padding: 15px;
 }
+
 .title-container {
   display: flex;
   justify-content: space-between;
   padding: 0 5px 10px;
 }
+
 .name {
   padding-left: 15px;
 }
+
 .new-car-container {
   width: 15%;
   padding-top: 10px;
 }
+
 .new-car-button {
   width: 95%;
   cursor: pointer;
@@ -20,10 +24,10 @@
   border-radius: 20px;
   font-size: 16px;
   border: 2px solid #f18400;
-
   background-color: #fff;
   color: #f18400;
 }
+
 .new-car-button:hover {
   background-color: #f18400;
   color: #fff;
@@ -31,9 +35,14 @@
 
 .table-container {
   padding: 0 20px;
+  overflow-x: auto;
 }
 
 .table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+
   th {
     background-color: #f18400;
     text-align: center;
@@ -42,33 +51,139 @@
     border: 1px solid #f1f1f1;
   }
 
-  tr {
+  tbody tr {
     color: #4d4f52;
     cursor: pointer;
+
     td {
       padding: 10px;
       border-bottom: 1px #dbdbdb solid;
       text-align: center;
     }
+
+    &:nth-child(even) {
+      background: #eef1f5;
+    }
+
+    &:nth-child(odd) {
+      background: #e2e5e5;
+    }
   }
 
-  tr:nth-child(even) {
-    background: #eef1f5;
-  }
-  tr:nth-child(odd) {
-    background: #e2e5e5;
-  }
-
-  .row:hover {
+  .row:hover,
+  .row:focus-visible {
     background-color: rgb(195, 192, 192);
+    outline: none;
   }
 
   .no-data-found {
+    padding: 10px;
     font-size: 15px;
+    text-align: center;
   }
 }
 
 .paginator {
-  padding-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 10px;
   background: #dddede;
+  color: #4d4f52;
+}
+
+.page-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-size select,
+.pagination-buttons button {
+  padding: 6px 8px;
+  border: 1px solid #aeb3b9;
+  border-radius: 4px;
+  background-color: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+.pagination-buttons {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.pagination-buttons button {
+  cursor: pointer;
+}
+
+.pagination-buttons button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.loading-bar {
+  height: 4px;
+  overflow: hidden;
+  background-color: #f8dcb9;
+}
+
+.loading-bar-progress {
+  display: block;
+  width: 35%;
+  height: 100%;
+  background-color: #f18400;
+  animation: loading 1.4s ease-in-out infinite;
+}
+
+.notification {
+  position: fixed;
+  z-index: 1100;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: #323232;
+  color: #fff;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+}
+
+.notification button {
+  border: 0;
+  background: transparent;
+  color: #ffb74d;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+@keyframes loading {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(300%);
+  }
+}
+
+@media (max-width: 640px) {
+  .new-car-container {
+    width: 40%;
+  }
+
+  .paginator {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .pagination-buttons button {
+    padding: 6px;
+  }
 }

@@ -1,13 +1,11 @@
 import {
   ApplicationConfig,
-  importProvidersFrom,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   provideClientHydration,
   withEventReplay,
@@ -22,6 +20,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
     provideHttpClient(withFetch()),
-    importProvidersFrom(MatSnackBarModule),
   ],
 };

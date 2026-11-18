@@ -4,60 +4,112 @@
       <h2>Cars DKV</h2>
     </div>
     <div class="new-car-container">
-      <button class="new-car-button" (click)="addNewCar()">
+      <button class="new-car-button" type="button" (click)="addNewCar()">
         Add New Vehicle
       </button>
     </div>
   </div>
 
-  @if(isCarListLoading$ | async) {
-  <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+  @if (isCarListLoading$ | async) {
+    <div class="loading-bar" role="progressbar" aria-label="Loading cars">
+      <span class="loading-bar-progress"></span>
+    </div>
   } @else {
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" class="table">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let row" (click)="rowSelected(row.id)">
-          {{ row.name }}
-        </td>
-      </ng-container>
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Manufacturer</th>
+            <th scope="col">Model</th>
+            <th scope="col">Mileage</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (car of visibleCars(); track car.id) {
+            <tr
+              class="row"
+              tabindex="0"
+              (click)="rowSelected(car.id)"
+              (keydown.enter)="rowSelected(car.id)"
+            >
+              <td>{{ car.name }}</td>
+              <td>{{ car.manufacturer }}</td>
+              <td>{{ car.model }}</td>
+              <td>{{ car.mileage ? car.mileage : "-" }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="no-data-found" colspan="4">
+                No vehicles are available
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
 
-      <ng-container matColumnDef="manufacturer">
-        <th mat-header-cell *matHeaderCellDef>Manufacturer</th>
-        <td mat-cell *matCellDef="let row">{{ row.manufacturer }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="model">
-        <th mat-header-cell *matHeaderCellDef>Model</th>
-        <td mat-cell *matCellDef="let row">{{ row.model }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="milage">
-        <th mat-header-cell *matHeaderCellDef>Mileage</th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.mileage ? row.mileage : "-" }}
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        class="row"
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-      ></tr>
-
-      <tr class="mat-row" *matNoDataRow>
-        <td class="no-data-found" colspan="4">No vehicles are available</td>
-      </tr>
-    </table>
-
-    <mat-paginator
-      class="paginator"
-      [pageSizeOptions]="[10, 20, 50, 100]"
-      showFirstLastButtons
-      #paginator
-    >
-    </mat-paginator>
-  </div>
+      <div class="paginator" aria-label="Vehicle list pagination">
+        <label class="page-size">
+          Items per page
+          <select
+            [value]="pageSize()"
+            (change)="changePageSize($event)"
+            aria-label="Items per page"
+          >
+            @for (size of pageSizeOptions; track size) {
+              <option [value]="size">{{ size }}</option>
+            }
+          </select>
+        </label>
+        <span class="range"
+          >{{ rangeStart() }}-{{ rangeEnd() }} of {{ cars().length }}</span
+        >
+        <div class="pagination-buttons">
+          <button
+            type="button"
+            aria-label="First page"
+            [disabled]="pageIndex() === 0"
+            (click)="goToFirstPage()"
+          >
+            First
+          </button>
+          <button
+            type="button"
+            aria-label="Previous page"
+            [disabled]="pageIndex() === 0"
+            (click)="goToPreviousPage()"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            aria-label="Next page"
+            [disabled]="pageIndex() >= pageCount() - 1"
+            (click)="goToNextPage()"
+          >
+            Next
+          </button>
+          <button
+            type="button"
+            aria-label="Last page"
+            [disabled]="pageIndex() >= pageCount() - 1"
+            (click)="goToLastPage()"
+          >
+            Last
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </div>
+
+@if (isNewCarDialogOpen) {
+  <app-new-car-dialog (closed)="closeNewCarDialog($event)"></app-new-car-dialog>
+}
+
+@if (notification$ | async; as notification) {
+  <div class="notification" role="alert">
+    <span>{{ notification }}</span>
+    <button type="button" (click)="dismissNotification()">Close</button>
+  </div>
+}

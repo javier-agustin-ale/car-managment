@@ -1,6 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   BehaviorSubject,
   catchError,
@@ -31,7 +30,12 @@ export class CarService {
   public isDetailsLoading$: Observable<boolean> =
     this.detailsLoadingSubject.asObservable();
 
-  constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) {
+  private notificationSubject = new BehaviorSubject<string | null>(null);
+  public notification$ = this.notificationSubject.asObservable();
+
+  private notificationTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  constructor(private httpClient: HttpClient) {
     this.updateCarList$();
   }
 
@@ -42,7 +46,7 @@ export class CarService {
       .pipe(
         take(1),
         catchError((error) => {
-          this.showSnackBar('Error getting data, please try again.', 'Close');
+          this.showNotification('Error getting data, please try again.');
           return throwError(() => error);
         })
       )
@@ -64,16 +68,28 @@ export class CarService {
       }),
       catchError((err: HttpErrorResponse) => {
         console.error(err);
-        this.showSnackBar(err.error, 'Close');
+        this.showNotification(String(err.error));
         return of(err);
       })
     );
   }
 
-  private showSnackBar(message: string, button: string): void {
-    this.snackBar.open(message, button, {
-      duration: 3000,
-      verticalPosition: 'top',
-    });
+  public dismissNotification(): void {
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+      this.notificationTimeout = undefined;
+    }
+    this.notificationSubject.next(null);
+  }
+
+  private showNotification(message: string): void {
+    if (this.notificationTimeout) {
+      clearTimeout(this.notificationTimeout);
+    }
+    this.notificationSubject.next(message);
+    this.notificationTimeout = setTimeout(
+      () => this.dismissNotification(),
+      3000,
+    );
   }
 }

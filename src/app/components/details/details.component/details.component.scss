@@ -1,10 +1,33 @@
 :host {
   background-color: lightgray;
 }
+
 .container {
   width: 85%;
   padding: 20px;
   margin: auto;
+}
+
+.button-container {
+  padding-top: 10px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #f18400;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #f18400;
+  font: inherit;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #f18400;
+  color: #fff;
 }
 
 .car-name-container {
@@ -12,8 +35,15 @@
   text-align: center;
 }
 
+.table-container {
+  overflow-x: auto;
+}
+
 .table {
-  padding-top: 10px;
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+
   th {
     background-color: #dfb1d4;
     text-align: center;
@@ -21,9 +51,10 @@
     border: 1px solid #f1f1f1;
   }
 
-  tr {
+  tbody tr {
     color: #4d4f52;
     background-color: #d5dae2;
+
     td {
       padding: 10px;
       border-bottom: 1px #dbdbdb solid;
