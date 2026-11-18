@@ -1,14 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   OnInit,
-  ViewChild,
-  ChangeDetectionStrategy,
+  signal,
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NEVER, Observable, take } from 'rxjs';
 import { Car } from '../../../interfaces/car.interface';
@@ -17,13 +15,7 @@ import { NewCarDialog } from '../../new-car/new-car-dialog/new-car-dialog';
 
 @Component({
   selector: 'app-home',
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatPaginator,
-    MatProgressBarModule,
-    NewCarDialog,
-  ],
+  imports: [CommonModule, NewCarDialog],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [CarService],
@@ -31,24 +23,30 @@ import { NewCarDialog } from '../../new-car/new-car-dialog/new-car-dialog';
   standalone: true,
 })
 export class HomeComponent implements OnInit {
-  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
-    this.dataSource.paginator = paginator;
-  }
-
   public carsList$: Observable<Car[]> = NEVER;
   public isCarListLoading$: Observable<boolean> = NEVER;
   public isNewCarDialogOpen = false;
-
-  public displayedColumns: string[] = [
-    'name',
-    'manufacturer',
-    'model',
-    'milage',
-  ];
-  public dataSource: MatTableDataSource<Car> = new MatTableDataSource();
+  public cars = signal<Car[]>([]);
+  public pageIndex = signal(0);
+  public pageSize = signal(10);
+  public pageSizeOptions = [10, 20, 50, 100];
+  public visibleCars = computed(() => {
+    const start = this.pageIndex() * this.pageSize();
+    return this.cars().slice(start, start + this.pageSize());
+  });
+  public pageCount = computed(() =>
+    Math.max(1, Math.ceil(this.cars().length / this.pageSize())),
+  );
+  public rangeStart = computed(() =>
+    this.cars().length === 0 ? 0 : this.pageIndex() * this.pageSize() + 1,
+  );
+  public rangeEnd = computed(() =>
+    Math.min((this.pageIndex() + 1) * this.pageSize(), this.cars().length),
+  );
 
   private carService = inject(CarService);
   private router = inject(Router);
+  public notification$ = this.carService.notification$;
 
   public ngOnInit(): void {
     this.defineStreams();
@@ -74,8 +72,39 @@ export class HomeComponent implements OnInit {
     this.carsList$ = this.carService.carList$;
 
     this.carsList$.subscribe((list) => {
-      const carList: Car[] = list.sort((a, b) => a.name.localeCompare(b.name));
-      this.dataSource.data = carList;
+      const carList = [...list].sort((a, b) => a.name.localeCompare(b.name));
+      this.cars.set(carList);
+      this.pageIndex.update((index) =>
+        Math.min(index, Math.max(0, this.pageCount() - 1)),
+      );
     });
+  }
+
+  public changePageSize(event: Event): void {
+    const pageSize = Number((event.target as HTMLSelectElement).value);
+    if (this.pageSizeOptions.includes(pageSize)) {
+      this.pageSize.set(pageSize);
+      this.pageIndex.set(0);
+    }
+  }
+
+  public goToFirstPage(): void {
+    this.pageIndex.set(0);
+  }
+
+  public goToPreviousPage(): void {
+    this.pageIndex.update((index) => Math.max(0, index - 1));
+  }
+
+  public goToNextPage(): void {
+    this.pageIndex.update((index) => Math.min(this.pageCount() - 1, index + 1));
+  }
+
+  public goToLastPage(): void {
+    this.pageIndex.set(this.pageCount() - 1);
+  }
+
+  public dismissNotification(): void {
+    this.carService.dismissNotification();
   }
 }

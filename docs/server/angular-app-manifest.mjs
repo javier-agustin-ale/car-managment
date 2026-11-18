@@ -1,27 +1,26 @@
 
 export default {
   bootstrap: () => import('./main.server.mjs').then(m => m.default),
-  inlineCriticalCss: true,
-  baseHref: '/dkv-javier/',
+  baseHref: "/car-management/",
+  criticalCssPlans: [[1,"/styles-Q5E3GPMD.css",149,["html","body"],[],[[5,[1,2],"{height:100%}",[0,0]],[5,1,"{color-scheme:light}",[0]],[37,2,"{margin:0;background-color:#fff;color:#212121;font:400 14px/1.43 Roboto,Helvetica Neue,sans-serif}",[0],["roboto","helvetica neue","sans-serif"]]]]],
   locale: undefined,
   routes: [
   {
     "renderMode": 0,
-    "route": "/dkv-javier"
+    "route": "/car-management"
   },
   {
     "renderMode": 0,
-    "route": "/dkv-javier/car/*"
+    "route": "/car-management/car/*"
   },
   {
     "renderMode": 0,
-    "route": "/dkv-javier/**"
+    "route": "/car-management/**"
   }
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 24613, hash: '5a8e0cfcfb2dc17178a8921ca21ccbceede40db19f3dd67d01f205b2c5e7defc', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 17066, hash: '116eed1a0d5c85bb95690f144d36e1378aebf209da1209427af9c7a933fc549d', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
-    'styles-MC7DNLBQ.css': {size: 8100, hash: '8P5gQXGkqW4', text: () => import('./assets-chunks/styles-MC7DNLBQ_css.mjs').then(m => m.default)}
+    "index.csr.html": {size: 17941, hash: "7e7c99050a30f56d", text: () => import("./assets-chunks/index_csr_html.mjs").then(m => m.default)},
+    "index.server.html": {size: 18000, hash: "25e59ffe879071f3", text: () => import("./assets-chunks/index_server_html.mjs").then(m => m.default)}
   },
 };
